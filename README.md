@@ -16,11 +16,11 @@ The system is designed to isolate business logic (The Core) from external infras
 Table Name: rentals
 
 - id: UUID (Primary Key)
-- customer_name: String
+- customer_first_name: String
+- customer_last_name: String
 - start_date: Date
 - end_date: Date
-- gross_revenue: Decimal
-- profit: Decimal (Calculated before persistence)
+- revenue: Decimal
 
 Business Logic (Domain Entity):
 Profit = Gross - (Gross * 0.10) - 250.00 
