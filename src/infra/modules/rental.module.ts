@@ -7,6 +7,7 @@ import { UpdateRentalUseCase } from "../../core/domain/rental/useCases/update-re
 import { DeleteRentalUseCase } from "../../core/domain/rental/useCases/delete-rental.use-case";
 import { FindRentalUseCase } from "../../core/domain/rental/useCases/find-rental.use-case";
 import { FindAllRentalsUseCase } from "../../core/domain/rental/useCases/find-all.use-case";
+import { GetRevenueUseCase } from "src/core/domain/rental/useCases/get-revenue.use-case";
 
 @Module({
   controllers: [RentalController],
@@ -32,6 +33,10 @@ import { FindAllRentalsUseCase } from "../../core/domain/rental/useCases/find-al
       provide: FindAllRentalsUseCase,
       useFactory: (repo: IRentalRepository) => new FindAllRentalsUseCase(repo),
       inject: ['IRentalRepository'],
+    },{
+      provide: GetRevenueUseCase,
+      useFactory: (repo: IRentalRepository) => new GetRevenueUseCase(repo),
+      inject:['IRentalRepository'],
     },{
       provide: 'IRentalRepository',
       useClass: DrizzleOrmAdapter,

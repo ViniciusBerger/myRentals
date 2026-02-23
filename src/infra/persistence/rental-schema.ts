@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, doublePrecision, timestamp, date } from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar, doublePrecision, timestamp, date, index } from "drizzle-orm/pg-core";
 
 // Define the table
 export const RentalSchema = pgTable("rentals", {
@@ -9,7 +9,9 @@ export const RentalSchema = pgTable("rentals", {
   endDate: date("end_date").notNull(),
   revenue: doublePrecision("total_revenue").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+},(table)=> ({
+  startDateidx: index("start_date_idx").on(table.startDate)
+}));
 
 // Optional: Export types for use in your Adapter
 export type RentalRow = typeof RentalSchema.$inferSelect; 

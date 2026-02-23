@@ -20,6 +20,8 @@ describe('DrizzleOrmAdapter', () => {
       select: jest.fn().mockReturnThis(),
       from: jest.fn().mockReturnThis(),
       limit: jest.fn().mockReturnThis(),
+      groupBy: jest.fn().mockReturnThis(),
+      orderBy: jest.fn().mockReturnThis(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -116,6 +118,60 @@ describe('DrizzleOrmAdapter', () => {
     it('should return false if no overlap found', async () => {
       dbMock.limit.mockResolvedValue([]);
       expect(await adapter.checkOverlapDate('S', 'E')).toBe(false);
+    });
+  });
+
+  describe('getMonthlyRevenueCurrentYear', () => {
+    it('should return a list of monthly revenue objects', async () => {
+      const mockMonthlyData = [
+        { month_label: '2026-01', totalRevenue: 5000 },
+        { month_label: '2026-02', totalRevenue: 3000 },
+      ];
+
+      // In Drizzle's chain, the last method (orderBy) is the one that resolves the promise
+      dbMock.orderBy.mockResolvedValue(mockMonthlyData);
+
+      const result = await adapter.getMonthlyRevenueCurrentYear();
+
+      expect(result).toEqual(mockMonthlyData);
+      expect(dbMock.select).toHaveBeenCalled();
+      expect(dbMock.where).toHaveBeenCalled();
+      expect(dbMock.groupBy).toHaveBeenCalled();
+    });
+
+    it('should return an empty array if no revenue exists for the current year', async () => {
+      dbMock.orderBy.mockResolvedValue([]);
+      
+      const result = await adapter.getMonthlyRevenueCurrentYear();
+      
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('getYearlyRevenueCurrentYear', () => {
+    it('should return an array with the current year total', async () => {
+      const mockYearlyData = [
+        { label: '2026', totalRevenue: 8000 }
+      ];
+
+      dbMock.orderBy.mockResolvedValue(mockYearlyData);
+
+      const result = await adapter.getYearlyRevenueCurrentYear();
+
+      expect(result).toEqual(mockYearlyData);
+      expect(result[0].label).toBe('2026');
+      expect(dbMock.groupBy).toHaveBeenCalled();
+    });
+
+    it('should convert DB sums to numbers via the repository logic', async () => {
+      // This tests that our mock returns what the mapWith(Number) would produce
+      const mockYearlyData = [{ label: '2026', totalRevenue: 150.50 }];
+      dbMock.orderBy.mockResolvedValue(mockYearlyData);
+
+      const result = await adapter.getYearlyRevenueCurrentYear();
+
+      expect(typeof result[0].totalRevenue).toBe('number');
+      expect(result[0].totalRevenue).toBe(150.50);
     });
   });
 });

@@ -42,4 +42,21 @@ export interface IRentalRepository {
      * Uses the logic: (ExistingStart < NewEnd) AND (ExistingEnd > NewStart).
      */
     checkOverlapDate(startDate: string, endDate: string): Promise<boolean>;
+
+
+    /**
+   * Calculates total revenue for the current calendar year only.
+   * 
+   * @returns A promise resolving to an array containing a single object 
+   * for the current year. Format: { label: "2026", totalRevenue: 50000 }
+   */
+    getYearlyRevenueCurrentYear();
+
+    /**
+   * Calculates revenue grouped by month for the current calendar year.
+   * 
+   * @returns A promise resolving to an array of objects for each month 
+   * in the current year. Format: { label: "2026-02", totalRevenue: 12500 }
+   */
+    getMonthlyRevenueCurrentYear();
 }
