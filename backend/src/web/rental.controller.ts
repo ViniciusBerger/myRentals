@@ -24,7 +24,7 @@ export class RentalController {
     @Get("/")
     @ApiOperation({ summary: 'Health check' })
     health() {
-        return "success"
+        return {status: 200, message: "success"}
     }
 
     @Get('rental')

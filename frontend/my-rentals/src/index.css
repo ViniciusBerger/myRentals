@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  /* This is the v4 way to add your 'Summer' colors */
+  --color-sage-50: #f2f7f5;
+  --color-sage-100: #e1ede8;
+  --color-sage-500: #5da387;
+  --color-sage-600: #4a8a6f;
+  
+  --color-sky-50: #f0f9ff;
+  --color-sky-600: #0284c7;
+}
